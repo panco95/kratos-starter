@@ -1,0 +1,37 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "hifriend/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+}
+
+message Data {
+  message Database {
+    string source = 1;
+    int32 max_idle_conn = 2;
+    int32 max_open_conn = 3;
+    google.protobuf.Duration conn_lifetime = 4;
+    int32 log_level = 5;
+  }
+  Database mysql = 1;
+}

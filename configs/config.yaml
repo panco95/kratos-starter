@@ -1,0 +1,14 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+data:
+  mysql:
+    source: root:root@tcp(127.0.0.1:3306)/test
+    max_idle_conn: 3
+    max_open_conn: 10
+    log_level: 4
+    conn_lifetime: 3600s
