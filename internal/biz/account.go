@@ -3,17 +3,19 @@ package biz
 import (
 	"context"
 
-	"github.com/go-kratos/kratos/v2/errors"
-	"github.com/go-kratos/kratos/v2/log"
 	account "hifriend/api/account/v1"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 var (
-	ErrAccountNotFound = errors.NotFound(account.ErrorReason_ACCOUNT_NOT_FOUND.String(), "account not found")
+	ErrAccountNotFound = func(metadata map[string]string) error {
+		return account.ErrorAccountNotFound("account not found").WithMetadata(metadata)
+	}
 )
 
 type Account struct {
-	Account  string
+	Username string
 	Password string
 	VCode    string
 }

@@ -2,8 +2,9 @@ package data
 
 import (
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
 	"hifriend/internal/biz"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type accountRepo struct {
@@ -19,8 +20,10 @@ func NewAccountRepo(data *Data, logger log.Logger) biz.AccountRepo {
 }
 
 func (r *accountRepo) Login(ctx context.Context, g *biz.Account) (*biz.Account, error) {
-	if g.Account != "root" {
-		return nil, biz.ErrAccountNotFound
+	if g.Username != "root" {
+		return nil, biz.ErrAccountNotFound(map[string]string{
+			"username": g.Username,
+		})
 	}
 	return g, nil
 }

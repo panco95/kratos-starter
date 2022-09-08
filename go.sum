@@ -31,6 +31,8 @@ github.com/fsnotify/fsnotify v1.5.4 h1:jRbGcIw6P2Meqdwuo0H1p6JVLbL5DHKAKlYndzMwV
 github.com/fsnotify/fsnotify v1.5.4/go.mod h1:OVB6XrOHzAwXMpEM7uPOzcehqUV2UqJxmVXmkdnm1bU=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-kratos/aegis v0.1.2/go.mod h1:jYeSQ3Gesba478zEnujOiG5QdsyF3Xk/8owFUeKcHxw=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20220907034423-667d63839c39 h1:rjU7hlgtajPgkS9BTxu+errfpFnLW+lJTx73BqrfTx0=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20220907034423-667d63839c39/go.mod h1:Ej6o4IEyPKzH2Lgh/xaybW6JW6CDxe/VrQ3ToX+gITg=
 github.com/go-kratos/kratos/v2 v2.4.1 h1:NFQy8Ha4Xu6T3Q40JlKzspvlMa5IGvIHhJw5+sqyV4c=
 github.com/go-kratos/kratos/v2 v2.4.1/go.mod h1:5acyLj4EgY428AJnZl2EwCrMV1OVlttQFBum+SghMiA=
 github.com/go-logr/logr v1.2.2/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=

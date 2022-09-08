@@ -21,7 +21,7 @@ func NewAccountService(uc *biz.AccountUsecase) *AccountService {
 
 func (s *AccountService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
 	res, err := s.uc.Login(ctx, &biz.Account{
-		Account:  req.Account,
+		Username: req.Username,
 		Password: req.Password,
 		VCode:    req.Vcode,
 	})
