@@ -5,7 +5,9 @@ import (
 	"os"
 
 	"hifriend/internal/conf"
+	zapPkg "hifriend/pkg/zap"
 
+	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/env"
@@ -24,12 +26,15 @@ var (
 	Version string
 	// flagconf is the config flag.
 	flagconf string
+	// flaglogpath is the log path.
+	flaglogpath string
 
 	id, _ = os.Hostname()
 )
 
 func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+	flag.StringVar(&flaglogpath, "log", "../../logs", "log path, eg: -log logs")
 }
 
 func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
@@ -48,7 +53,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
+	logger := log.With(zap.NewLogger(zapPkg.NewLogger(flaglogpath, true)),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,
