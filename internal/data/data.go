@@ -1,11 +1,13 @@
 package data
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/wire"
 	"hifriend/internal/conf"
+	"hifriend/internal/data/models"
 	"hifriend/pkg/database"
 	"time"
+
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/wire"
 )
 
 // ProviderSet is data providers.
@@ -22,7 +24,7 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 
-	mysqlCli, err := ConnMysql(c)
+	mysqlCli, err := SetupMysql(c)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -32,13 +34,20 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}, cleanup, nil
 }
 
-func ConnMysql(c *conf.Data) (*database.Client, error) {
+// SetupMysql .
+func SetupMysql(c *conf.Data) (*database.Client, error) {
 	cli, err := database.NewMysql(
 		c.Mysql.Source,
 		int(c.Mysql.MaxIdleConn),
 		int(c.Mysql.MaxOpenConn),
 		time.Duration(c.Mysql.ConnLifetime.Seconds)*time.Second,
 		int(c.Mysql.LogLevel),
+	)
+	if err != nil {
+		return nil, err
+	}
+	err = cli.AutoMigrate(
+		&models.Account{},
 	)
 	if err != nil {
 		return nil, err
