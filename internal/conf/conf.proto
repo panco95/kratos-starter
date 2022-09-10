@@ -33,5 +33,17 @@ message Data {
     google.protobuf.Duration conn_lifetime = 4;
     int32 log_level = 5;
   }
+  message Consul {
+    string address = 1;
+    string scheme = 2;
+    string path_prefix = 3;
+    string data_center = 4;
+    google.protobuf.Duration wait_time = 5;
+    string token = 6;
+    string token_file = 7;
+    string namespace = 8;
+    string partition = 9;
+  }
   Database mysql = 1;
+  Consul consul = 2;
 }

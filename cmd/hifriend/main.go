@@ -5,9 +5,12 @@ import (
 	"os"
 
 	"hifriend/internal/conf"
+
 	zapPkg "hifriend/pkg/zap"
 
 	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
+	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
+
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/env"
@@ -16,14 +19,15 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/hashicorp/consul/api"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string
+	Name string = "account"
 	// Version is the version of the compiled software.
-	Version string
+	Version string = "v1.0.0"
 	// flagconf is the config flag.
 	flagconf string
 	// flaglogpath is the log path.
@@ -37,7 +41,24 @@ func init() {
 	flag.StringVar(&flaglogpath, "log", "../../logs", "log path, eg: -log logs")
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(logger log.Logger, c *conf.Data, gs *grpc.Server, hs *http.Server) *kratos.App {
+	// consul register
+	client, err := api.NewClient(&api.Config{
+		Address:    c.Consul.Address,
+		Scheme:     c.Consul.Scheme,
+		PathPrefix: c.Consul.PathPrefix,
+		Datacenter: c.Consul.DataCenter,
+		WaitTime:   c.Consul.WaitTime.AsDuration(),
+		Token:      c.Consul.Token,
+		TokenFile:  c.Consul.TokenFile,
+		Namespace:  c.Consul.Namespace,
+		Partition:  c.Consul.Partition,
+	})
+	if err != nil {
+		panic(err)
+	}
+	reg := consul.New(client)
+
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -48,6 +69,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 			gs,
 			hs,
 		),
+		kratos.Registrar(reg),
 	)
 }
 

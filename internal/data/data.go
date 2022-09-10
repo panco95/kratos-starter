@@ -4,7 +4,6 @@ import (
 	"hifriend/internal/conf"
 	"hifriend/internal/data/models"
 	"hifriend/pkg/database"
-	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -40,7 +39,7 @@ func SetupMysql(c *conf.Data) (*database.Client, error) {
 		c.Mysql.Source,
 		int(c.Mysql.MaxIdleConn),
 		int(c.Mysql.MaxOpenConn),
-		time.Duration(c.Mysql.ConnLifetime.Seconds)*time.Second,
+		c.Mysql.ConnLifetime.AsDuration(),
 		int(c.Mysql.LogLevel),
 	)
 	if err != nil {
