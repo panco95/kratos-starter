@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"crypto/tls"
 	"flag"
 	"os"
 
@@ -44,17 +42,6 @@ func init() {
 }
 
 func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server, hs *http.Server) *kratos.App {
-	endpoint := "discovery://template/" + Name
-	_, err := grpc.Dial(
-		context.Background(),
-		grpc.WithEndpoint(endpoint),
-		grpc.WithDiscovery(consul.New(data.ConsulCli)),
-		grpc.WithTLSConfig(&tls.Config{}),
-	)
-	if err != nil {
-		panic(err)
-	}
-
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
