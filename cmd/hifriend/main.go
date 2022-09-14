@@ -1,17 +1,15 @@
 package main
 
 import (
+	"context"
+	"crypto/tls"
 	"flag"
 	"os"
 
 	"hifriend/internal/conf"
 	"hifriend/internal/data"
 
-	zapPkg "hifriend/pkg/zap"
-
-	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
-
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/env"
@@ -20,6 +18,10 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
+	zapPkg "hifriend/pkg/zap"
+
+	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -42,6 +44,17 @@ func init() {
 }
 
 func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server, hs *http.Server) *kratos.App {
+	endpoint := "discovery://template/" + Name
+	_, err := grpc.Dial(
+		context.Background(),
+		grpc.WithEndpoint(endpoint),
+		grpc.WithDiscovery(consul.New(data.ConsulCli)),
+		grpc.WithTLSConfig(&tls.Config{}),
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),

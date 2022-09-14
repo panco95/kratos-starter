@@ -7,7 +7,8 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"github.com/hashicorp/consul/api"
+
+	consulApi "github.com/hashicorp/consul/api"
 )
 
 // ProviderSet is data providers.
@@ -16,7 +17,7 @@ var ProviderSet = wire.NewSet(NewData, NewAccountRepo)
 // Data .
 type Data struct {
 	MysqlCli  *database.Client
-	ConsulCli *api.Client
+	ConsulCli *consulApi.Client
 }
 
 // NewData .
@@ -61,8 +62,9 @@ func SetupMysql(c *conf.Data) (*database.Client, error) {
 	return cli, nil
 }
 
-func SetupConsul(c *conf.Data) (*api.Client, error) {
-	client, err := api.NewClient(&api.Config{
+// SetupConsul .
+func SetupConsul(c *conf.Data) (*consulApi.Client, error) {
+	client, err := consulApi.NewClient(&consulApi.Config{
 		Address:    c.Consul.Address,
 		Scheme:     c.Consul.Scheme,
 		PathPrefix: c.Consul.PathPrefix,
@@ -77,10 +79,4 @@ func SetupConsul(c *conf.Data) (*api.Client, error) {
 		return nil, err
 	}
 	return client, nil
-	// cli := consul.New(client)
-	// endpoint := "discovery:///account"
-	// conn, err := grpc.Dial(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(cli), grpc.WithTLSConfig(&tls.Config{}))
-	// if err != nil {
-	// 	panic(err)
-	// }
 }
