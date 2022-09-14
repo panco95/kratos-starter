@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/hashicorp/consul/api"
 )
 
 // ProviderSet is data providers.
@@ -14,7 +15,8 @@ var ProviderSet = wire.NewSet(NewData, NewAccountRepo)
 
 // Data .
 type Data struct {
-	mysqlCli *database.Client
+	MysqlCli  *database.Client
+	ConsulCli *api.Client
 }
 
 // NewData .
@@ -23,13 +25,18 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 
+	consulCli, err := SetupConsul(c)
+	if err != nil {
+		return nil, nil, err
+	}
 	mysqlCli, err := SetupMysql(c)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	return &Data{
-		mysqlCli: mysqlCli,
+		MysqlCli:  mysqlCli,
+		ConsulCli: consulCli,
 	}, cleanup, nil
 }
 
@@ -52,4 +59,28 @@ func SetupMysql(c *conf.Data) (*database.Client, error) {
 		return nil, err
 	}
 	return cli, nil
+}
+
+func SetupConsul(c *conf.Data) (*api.Client, error) {
+	client, err := api.NewClient(&api.Config{
+		Address:    c.Consul.Address,
+		Scheme:     c.Consul.Scheme,
+		PathPrefix: c.Consul.PathPrefix,
+		Datacenter: c.Consul.DataCenter,
+		WaitTime:   c.Consul.WaitTime.AsDuration(),
+		Token:      c.Consul.Token,
+		TokenFile:  c.Consul.TokenFile,
+		Namespace:  c.Consul.Namespace,
+		Partition:  c.Consul.Partition,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+	// cli := consul.New(client)
+	// endpoint := "discovery:///account"
+	// conn, err := grpc.Dial(context.Background(), grpc.WithEndpoint(endpoint), grpc.WithDiscovery(cli), grpc.WithTLSConfig(&tls.Config{}))
+	// if err != nil {
+	// 	panic(err)
+	// }
 }

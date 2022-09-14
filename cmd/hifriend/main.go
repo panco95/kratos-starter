@@ -5,11 +5,12 @@ import (
 	"os"
 
 	"hifriend/internal/conf"
+	"hifriend/internal/data"
 
 	zapPkg "hifriend/pkg/zap"
 
 	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
-	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
+	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -19,7 +20,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/hashicorp/consul/api"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -41,24 +41,7 @@ func init() {
 	flag.StringVar(&flaglogpath, "log", "../../logs", "log path, eg: -log logs")
 }
 
-func newApp(logger log.Logger, c *conf.Data, gs *grpc.Server, hs *http.Server) *kratos.App {
-	// consul register
-	client, err := api.NewClient(&api.Config{
-		Address:    c.Consul.Address,
-		Scheme:     c.Consul.Scheme,
-		PathPrefix: c.Consul.PathPrefix,
-		Datacenter: c.Consul.DataCenter,
-		WaitTime:   c.Consul.WaitTime.AsDuration(),
-		Token:      c.Consul.Token,
-		TokenFile:  c.Consul.TokenFile,
-		Namespace:  c.Consul.Namespace,
-		Partition:  c.Consul.Partition,
-	})
-	if err != nil {
-		panic(err)
-	}
-	reg := consul.New(client)
-
+func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server, hs *http.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -69,7 +52,7 @@ func newApp(logger log.Logger, c *conf.Data, gs *grpc.Server, hs *http.Server) *
 			gs,
 			hs,
 		),
-		kratos.Registrar(reg),
+		kratos.Registrar(consul.New(data.ConsulCli)),
 	)
 }
 
