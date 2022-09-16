@@ -10,10 +10,10 @@ import (
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 
-	"demo/app/user/service/internal/conf"
-	"demo/app/user/service/internal/data"
+	"demo/app/gateway/interface/internal/conf"
+	"demo/app/gateway/interface/internal/data"
 	zapPkg "demo/pkg/zap"
 
 	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
@@ -22,7 +22,7 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string = "demo.user.service"
+	Name string = "demo.gateway.interface"
 	// Version is the version of the compiled software.
 	Version string = "v1.0.0"
 	// flagconf is the config flag.
@@ -38,7 +38,7 @@ func init() {
 	flag.StringVar(&flaglogpath, "log", "../../logs", "log path, eg: -log logs")
 }
 
-func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server) *kratos.App {
+func newApp(logger log.Logger, c *conf.Data, data *data.Data, hs *http.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -46,7 +46,7 @@ func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server) *
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
 		kratos.Server(
-			gs,
+			hs,
 		),
 		kratos.Registrar(consul.New(data.ConsulCli)),
 	)

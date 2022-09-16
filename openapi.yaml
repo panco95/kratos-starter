@@ -83,9 +83,8 @@ components:
         demo.gateway.v1.RegisterReply:
             type: object
             properties:
-                id:
-                    type: integer
-                    format: int64
+                token:
+                    type: string
         demo.gateway.v1.RegisterReq:
             type: object
             properties:
