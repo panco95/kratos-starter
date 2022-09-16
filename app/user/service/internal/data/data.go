@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"crypto/tls"
 
 	userPB "demo/api/user/service/v1"
 	"demo/app/user/service/internal/conf"
@@ -100,12 +99,11 @@ func (data *Data) SetupMysql(c *conf.Data) error {
 // SetupGRPCSvcCli .
 func (data *Data) SetupGRPCSvcCli() error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
-	endpoint := "discovery://demo/user"
+	endpoint := "discovery:///demo.user.service"
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(endpoint),
 		grpc.WithDiscovery(consul.New(data.ConsulCli)),
-		grpc.WithTLSConfig(&tls.Config{}),
 	)
 	if err != nil {
 		return err
