@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"os"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2"
@@ -30,7 +29,7 @@ var (
 	// flaglogpath is the log path.
 	flaglogpath string
 
-	id, _ = os.Hostname()
+	id = Name
 )
 
 func init() {
@@ -55,7 +54,7 @@ func newApp(logger log.Logger, c *conf.Data, data *data.Data, gs *grpc.Server) *
 func main() {
 	flag.Parse()
 	logger := log.With(zap.NewLogger(zapPkg.NewLogger(flaglogpath, true)),
-		// "service.id", id,
+		"service.id", id,
 		"service.name", Name,
 		"service.version", Version,
 		"trace.id", tracing.TraceID(),
