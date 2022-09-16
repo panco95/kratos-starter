@@ -3,6 +3,8 @@ package data
 import (
 	"context"
 	"crypto/tls"
+
+	userPB "demo/api/user/service/v1"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/models"
 	"demo/pkg/database"
@@ -11,11 +13,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/wrr"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/google/wire"
-	"google.golang.org/grpc"
-
-	grpcConn "github.com/go-kratos/kratos/v2/transport/grpc"
-	httpConn "github.com/go-kratos/kratos/v2/transport/http"
 	consulApi "github.com/hashicorp/consul/api"
 )
 
@@ -24,10 +23,9 @@ var ProviderSet = wire.NewSet(NewData, NewGatewayRepo)
 
 // Data .
 type Data struct {
-	MysqlCli  *database.Client
-	ConsulCli *consulApi.Client
-	GrpcCli   *grpc.ClientConn
-	HttpCli   *httpConn.Client
+	MysqlCli   *database.Client
+	ConsulCli  *consulApi.Client
+	UserSvcCli userPB.UserServiceClient
 }
 
 // NewData .
@@ -35,51 +33,29 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
-
-	consulCli, err := SetupConsul(c)
-	if err != nil {
-		return nil, nil, err
-	}
-	mysqlCli, err := SetupMysql(c)
-	if err != nil {
-		return nil, nil, err
-	}
-	grpcCli, httpCli, err := SetupHTTPAndGRPCCli(consulCli)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return &Data{
-		MysqlCli:  mysqlCli,
-		ConsulCli: consulCli,
-		GrpcCli:   grpcCli,
-		HttpCli:   httpCli,
-	}, cleanup, nil
-}
-
-// SetupMysql .
-func SetupMysql(c *conf.Data) (*database.Client, error) {
-	cli, err := database.NewMysql(
-		c.Mysql.Source,
-		int(c.Mysql.MaxIdleConn),
-		int(c.Mysql.MaxOpenConn),
-		c.Mysql.ConnLifetime.AsDuration(),
-		int(c.Mysql.LogLevel),
+	var (
+		err  error
+		data = &Data{}
 	)
+
+	err = data.SetupConsul(c)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = cli.AutoMigrate(
-		&models.Account{},
-	)
+	err = data.SetupMysql(c)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return cli, nil
+	err = data.SetupGRPCSvcCli()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return data, cleanup, nil
 }
 
 // SetupConsul .
-func SetupConsul(c *conf.Data) (*consulApi.Client, error) {
+func (data *Data) SetupConsul(c *conf.Data) error {
 	client, err := consulApi.NewClient(&consulApi.Config{
 		Address:    c.Consul.Address,
 		Scheme:     c.Consul.Scheme,
@@ -92,34 +68,48 @@ func SetupConsul(c *conf.Data) (*consulApi.Client, error) {
 		Partition:  c.Consul.Partition,
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return client, nil
+	data.ConsulCli = client
+	return nil
 }
 
-// SetupHTTPAndGRPCCli .
-func SetupHTTPAndGRPCCli(consulCli *consulApi.Client) (*grpc.ClientConn, *httpConn.Client, error) {
-	endpoint := "discovery:///template"
+// SetupMysql .
+func (data *Data) SetupMysql(c *conf.Data) error {
+	client, err := database.NewMysql(
+		c.Mysql.Source,
+		int(c.Mysql.MaxIdleConn),
+		int(c.Mysql.MaxOpenConn),
+		c.Mysql.ConnLifetime.AsDuration(),
+		int(c.Mysql.LogLevel),
+	)
+	if err != nil {
+		return err
+	}
+	err = client.AutoMigrate(
+		&models.User{},
+	)
+	if err != nil {
+		return err
+	}
+	data.MysqlCli = client
+	return nil
+}
+
+// SetupGRPCSvcCli .
+func (data *Data) SetupGRPCSvcCli() error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
-
-	gConn, err := grpcConn.Dial(
+	endpoint := "discovery://demo/gateway"
+	conn, err := grpc.DialInsecure(
 		context.Background(),
-		grpcConn.WithEndpoint(endpoint),
-		grpcConn.WithDiscovery(consul.New(consulCli)),
-		grpcConn.WithTLSConfig(&tls.Config{}),
+		grpc.WithEndpoint(endpoint),
+		grpc.WithDiscovery(consul.New(data.ConsulCli)),
+		grpc.WithTLSConfig(&tls.Config{}),
 	)
 	if err != nil {
-		return nil, nil, err
+		return err
 	}
 
-	hConn, err := httpConn.NewClient(
-		context.Background(),
-		httpConn.WithEndpoint(endpoint),
-		httpConn.WithDiscovery(consul.New(consulCli)),
-	)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return gConn, hConn, nil
+	data.UserSvcCli = userPB.NewUserServiceClient(conn)
+	return nil
 }

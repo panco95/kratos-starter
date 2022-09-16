@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 
+	v1 "demo/api/user/service/v1"
 	"demo/app/gateway/interface/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -21,5 +22,10 @@ func NewGatewayRepo(data *Data, logger log.Logger) biz.GatewayRepo {
 }
 
 func (r *userRepo) Login(ctx context.Context, g *biz.User) (*biz.User, error) {
+	reply, err := r.data.UserSvcCli.Login(ctx, &v1.LoginReq{Username: g.Username, Password: g.Password})
+	if err != nil {
+		return nil, err
+	}
+	r.log.Info(reply)
 	return g, nil
 }
