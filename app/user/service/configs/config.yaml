@@ -1,0 +1,13 @@
+server:
+  grpc:
+    addr: 0.0.0.0:9002
+    timeout: 1s
+data:
+  mysql:
+    source: root:0825@tcp(127.0.0.1:3306)/hi_friend
+    max_idle_conn: 3
+    max_open_conn: 10
+    log_level: 0
+    conn_lifetime: 3600s
+  consul:
+    address: 127.0.0.1:8500
