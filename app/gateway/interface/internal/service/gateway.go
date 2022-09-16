@@ -20,6 +20,11 @@ func NewGatewayService(uc *biz.GatewayUsecase) *GatewayService {
 }
 
 func (s *GatewayService) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
+	// if md, ok := metadata.FromServerContext(ctx); ok {
+	// 	token := md.Get("x-app-global-token")
+	// 	log.Print(token)
+	// }
+
 	_, err := s.uc.Login(ctx, &biz.User{
 		Username: req.Username,
 		Password: req.Password,
