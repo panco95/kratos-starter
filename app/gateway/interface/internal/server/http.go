@@ -5,7 +5,6 @@ import (
 	pb "demo/api/gateway/interface/v1"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/service"
-	"demo/pkg/tracer"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -18,10 +17,6 @@ import (
 
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(c *conf.Server, gatewaySvc *service.GatewayService, logger log.Logger) *http.Server {
-	err := tracer.InitJaegerTracer(c.Tracer.Jaeger.Endpoint, "gateway", "http server")
-	if err != nil {
-		log.NewHelper(logger).Errorf("InitJaegerTracer %v", err)
-	}
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(

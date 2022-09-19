@@ -6,7 +6,6 @@ import (
 	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/conf"
 	"demo/app/user/service/internal/service"
-	"demo/pkg/tracer"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -19,10 +18,6 @@ import (
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(c *conf.Server, userSvc *service.UserService, logger log.Logger) *grpc.Server {
-	err := tracer.InitJaegerTracer(c.Tracer.Jaeger.Endpoint, "user", "grpc server")
-	if err != nil {
-		log.NewHelper(logger).Errorf("InitJaegerTracer %v", err)
-	}
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(

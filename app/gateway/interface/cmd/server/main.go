@@ -13,6 +13,7 @@ import (
 
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/data"
+	"demo/pkg/tracer"
 	zapPkg "demo/pkg/zap"
 
 	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
@@ -84,6 +85,11 @@ func main() {
 		panic(err)
 	}
 	defer cleanup()
+
+	err = tracer.InitJaegerTracer(bc.Server.Tracer.Jaeger.Endpoint, Name)
+	if err != nil {
+		log.NewHelper(logger).Errorf("InitJaegerTracer %v", err)
+	}
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {

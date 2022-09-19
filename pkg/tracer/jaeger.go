@@ -2,7 +2,6 @@ package tracer
 
 import (
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
@@ -10,7 +9,7 @@ import (
 )
 
 // 设置全局trace
-func InitJaegerTracer(endpoint, serviceName, exporter string) error {
+func InitJaegerTracer(endpoint, serviceName string) error {
 	// 创建 Jaeger exporter
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(endpoint)))
 	if err != nil {
@@ -24,7 +23,7 @@ func InitJaegerTracer(endpoint, serviceName, exporter string) error {
 		// 在资源中记录有关此应用程序的信息
 		tracesdk.WithResource(resource.NewSchemaless(
 			semconv.ServiceNameKey.String(serviceName),
-			attribute.String("exporter", exporter),
+			// attribute.String("exporter", "jaeger"),
 		)),
 	)
 	otel.SetTracerProvider(tp)
