@@ -12,14 +12,8 @@ var (
 	ErrUserNotFound = pb.ErrorUserNotFound("user not found")
 )
 
-type User struct {
-	Username string
-	Password string
-	VCode    string
-}
-
 type UserRepo interface {
-	Login(context.Context, *User) (*User, error)
+	Login(context.Context, *pb.LoginReq) (*pb.LoginReply, error)
 }
 
 type UserUsecase struct {
@@ -31,6 +25,6 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
-func (uc *UserUsecase) Login(ctx context.Context, g *User) (*User, error) {
-	return uc.repo.Login(ctx, g)
+func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
+	return uc.repo.Login(ctx, req)
 }

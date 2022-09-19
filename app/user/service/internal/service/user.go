@@ -24,14 +24,9 @@ func NewUserService(uc *biz.UserUsecase, logger log.Logger) *UserService {
 }
 
 func (s *UserService) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
-	_, err := s.uc.Login(ctx, &biz.User{
-		Username: req.Username,
-		Password: req.Password,
-	})
+	res, err := s.uc.Login(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.LoginReply{
-		Token: "token",
-	}, nil
+	return res, nil
 }

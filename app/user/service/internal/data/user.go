@@ -2,8 +2,11 @@ package data
 
 import (
 	"context"
+	"time"
 
+	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/biz"
+	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -20,9 +23,14 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
-func (r *userRepo) Login(ctx context.Context, g *biz.User) (*biz.User, error) {
-	if g.Username != "root" {
-		return nil, biz.ErrUserNotFound
+func (r *userRepo) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
+	jwtClass := jwt.New([]byte("demo"), "panco")
+	token, err := jwtClass.BuildToken(1, time.Hour*24)
+	if err != nil {
+		return nil, err
 	}
-	return g, nil
+	reply := &pb.LoginReply{
+		Token: token,
+	}
+	return reply, nil
 }

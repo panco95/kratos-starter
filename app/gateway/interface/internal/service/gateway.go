@@ -29,15 +29,10 @@ func (s *GatewayService) Login(ctx context.Context, req *pb.LoginReq) (*pb.Login
 	// 	s.log.WithContext(ctx).Infof("Token: %s", token)
 	// }
 
-	_, err := s.uc.Login(ctx, &biz.User{
-		Username: req.Username,
-		Password: req.Password,
-	})
+	reply, err := s.uc.Login(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.LoginReply{
-		Token: "token",
-	}, nil
+	return reply, nil
 }
