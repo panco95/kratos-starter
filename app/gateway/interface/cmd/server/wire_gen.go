@@ -28,7 +28,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	gatewayUsecase := biz.NewGatewayUsecase(gatewayRepo, logger)
 	gatewayService := service.NewGatewayService(gatewayUsecase)
 	httpServer := server.NewHTTPServer(confServer, gatewayService, logger)
-	app := newApp(logger, confData, dataData, httpServer)
+	app := newApp(logger, confServer, dataData, httpServer)
 	return app, func() {
 		cleanup()
 	}, nil

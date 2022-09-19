@@ -32,6 +32,7 @@ func (s *GatewayService) Login(ctx context.Context, req *pb.LoginReq) (*pb.Login
 	if err != nil {
 		return nil, err
 	}
+
 	return &pb.LoginReply{
 		Token: "token",
 	}, nil

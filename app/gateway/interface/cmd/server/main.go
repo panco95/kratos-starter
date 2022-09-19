@@ -29,7 +29,7 @@ var (
 	// flaglogpath is the log path.
 	flaglogpath string
 
-	id = Name
+	id string
 )
 
 func init() {
@@ -37,7 +37,8 @@ func init() {
 	flag.StringVar(&flaglogpath, "log", "../../logs", "log path, eg: -log logs")
 }
 
-func newApp(logger log.Logger, c *conf.Data, data *data.Data, hs *http.Server) *kratos.App {
+func newApp(logger log.Logger, c *conf.Server, data *data.Data, hs *http.Server) *kratos.App {
+	id = Name + "#" + c.Http.Addr
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
