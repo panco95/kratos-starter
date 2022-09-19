@@ -16,7 +16,14 @@ message Server {
     string addr = 2;
     google.protobuf.Duration timeout = 3;
   }
+  message Tracer {
+    Jaeger jaeger = 1;
+  }
+  message Jaeger {
+    string endpoint = 1;
+  }
   HTTP http = 1;
+  Tracer tracer = 2;
 }
 
 message Data {

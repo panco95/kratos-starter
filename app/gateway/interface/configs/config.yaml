@@ -2,6 +2,9 @@ server:
   http:
     addr: 0.0.0.0:9001
     timeout: 1s
+  tracer:
+    jaeger:
+      endpoint: http://127.0.0.1:14268/api/traces
 data:
   mysql:
     source: root:0825@tcp(127.0.0.1:3306)/hi_friend
