@@ -280,9 +280,27 @@ func (m *LoginReq) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Username
+	if l := utf8.RuneCountInString(m.GetUsername()); l < 4 || l > 20 {
+		err := LoginReqValidationError{
+			field:  "Username",
+			reason: "value length must be between 4 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Password
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 20 {
+		err := LoginReqValidationError{
+			field:  "Password",
+			reason: "value length must be between 6 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return LoginReqMultiError(errors)
