@@ -5,17 +5,21 @@ import (
 
 	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/biz"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type UserService struct {
 	pb.UnimplementedUserServiceServer
 
-	uc *biz.UserUsecase
+	log *log.Helper
+	uc  *biz.UserUsecase
 }
 
-func NewUserService(uc *biz.UserUsecase) *UserService {
+func NewUserService(uc *biz.UserUsecase, logger log.Logger) *UserService {
 	return &UserService{
-		uc: uc,
+		uc:  uc,
+		log: log.NewHelper(logger),
 	}
 }
 

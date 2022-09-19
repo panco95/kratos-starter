@@ -26,6 +26,6 @@ func (r *userRepo) Login(ctx context.Context, g *biz.User) (*biz.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	r.log.Info(reply)
+	r.log.WithContext(ctx).Infof("Reply: %v", reply)
 	return g, nil
 }

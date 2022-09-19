@@ -26,7 +26,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	}
 	gatewayRepo := data.NewGatewayRepo(dataData, logger)
 	gatewayUsecase := biz.NewGatewayUsecase(gatewayRepo, logger)
-	gatewayService := service.NewGatewayService(gatewayUsecase)
+	gatewayService := service.NewGatewayService(gatewayUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, gatewayService, logger)
 	app := newApp(logger, confServer, dataData, httpServer)
 	return app, func() {
