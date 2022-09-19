@@ -1,11 +1,13 @@
 package server
 
 import (
+	"context"
 	pb "demo/api/gateway/interface/v1"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
@@ -16,9 +18,17 @@ import (
 func NewHTTPServer(c *conf.Server, gatewaySvc *service.GatewayService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
-			recovery.Recovery(),
+			recovery.Recovery(
+				recovery.WithLogger(logger),
+				recovery.WithHandler(func(ctx context.Context, req, err interface{}) error {
+					return nil
+				}),
+			),
+			metadata.Server(
+				metadata.WithPropagatedPrefix("x-app"),
+			),
+			logging.Server(logger),
 			validate.Validator(),
-			metadata.Server(metadata.WithPropagatedPrefix("x-app")),
 		),
 	}
 	if c.Http.Network != "" {

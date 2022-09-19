@@ -22,10 +22,9 @@ func NewGatewayRepo(data *Data, logger log.Logger) biz.GatewayRepo {
 }
 
 func (r *userRepo) Login(ctx context.Context, g *biz.User) (*biz.User, error) {
-	reply, err := r.data.UserSvcCli.Login(ctx, &v1.LoginReq{Username: g.Username, Password: g.Password})
+	_, err := r.data.UserSvcCli.Login(ctx, &v1.LoginReq{Username: g.Username, Password: g.Password})
 	if err != nil {
 		return nil, err
 	}
-	r.log.WithContext(ctx).Infof("Reply: %v", reply)
 	return g, nil
 }

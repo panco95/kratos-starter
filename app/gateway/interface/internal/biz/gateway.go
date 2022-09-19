@@ -26,6 +26,5 @@ func NewGatewayUsecase(repo GatewayRepo, logger log.Logger) *GatewayUsecase {
 }
 
 func (uc *GatewayUsecase) Login(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("Account: %v", g)
 	return uc.repo.Login(ctx, g)
 }

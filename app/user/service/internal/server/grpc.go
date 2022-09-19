@@ -1,11 +1,14 @@
 package server
 
 import (
+	"context"
+
 	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/conf"
 	"demo/app/user/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
@@ -16,8 +19,16 @@ import (
 func NewGRPCServer(c *conf.Server, userSvc *service.UserService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
-			recovery.Recovery(),
-			metadata.Server(metadata.WithPropagatedPrefix("x-app")),
+			recovery.Recovery(
+				recovery.WithLogger(logger),
+				recovery.WithHandler(func(ctx context.Context, req, err interface{}) error {
+					return nil
+				}),
+			),
+			metadata.Server(
+				metadata.WithPropagatedPrefix("x-app"),
+			),
+			logging.Server(logger),
 			validate.Validator(),
 		),
 	}

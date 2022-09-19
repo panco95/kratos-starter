@@ -32,6 +32,5 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 }
 
 func (uc *UserUsecase) Login(ctx context.Context, g *User) (*User, error) {
-	uc.log.WithContext(ctx).Infof("Account: %v", g)
 	return uc.repo.Login(ctx, g)
 }

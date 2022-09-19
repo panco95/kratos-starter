@@ -7,7 +7,6 @@ import (
 	"demo/app/gateway/interface/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/metadata"
 )
 
 type GatewayService struct {
@@ -25,10 +24,10 @@ func NewGatewayService(uc *biz.GatewayUsecase, logger log.Logger) *GatewayServic
 }
 
 func (s *GatewayService) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
-	if md, ok := metadata.FromServerContext(ctx); ok {
-		token := md.Get("x-app-global-token")
-		s.log.WithContext(ctx).Infof("Token: %s", token)
-	}
+	// if md, ok := metadata.FromServerContext(ctx); ok {
+	// 	token := md.Get("x-app-global-token")
+	// 	s.log.WithContext(ctx).Infof("Token: %s", token)
+	// }
 
 	_, err := s.uc.Login(ctx, &biz.User{
 		Username: req.Username,

@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/wrr"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -45,7 +46,7 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	err = data.SetupGRPCSvcCli()
+	err = data.SetupGRPCSvcCli(logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -96,13 +97,18 @@ func (data *Data) SetupMysql(c *conf.Data) error {
 }
 
 // SetupGRPCSvcCli .
-func (data *Data) SetupGRPCSvcCli() error {
+func (data *Data) SetupGRPCSvcCli(logger log.Logger) error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
 	endpoint := "discovery:///demo.user.service"
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(endpoint),
-		grpc.WithDiscovery(consul.New(data.ConsulCli)),
+		grpc.WithMiddleware(
+			logging.Client(logger),
+		),
+		grpc.WithDiscovery(
+			consul.New(data.ConsulCli),
+		),
 	)
 	if err != nil {
 		return err
