@@ -6,10 +6,7 @@ import (
 	"time"
 )
 
-type AuthRepo interface {
-	BuildToken(ctx context.Context, id uint, expire time.Duration) (string, error)
-}
-
 type UserRepo interface {
 	FindByUsername(context.Context, string) (*models.User, error)
+	BuildToken(ctx context.Context, id uint, expire time.Duration) (string, error)
 }

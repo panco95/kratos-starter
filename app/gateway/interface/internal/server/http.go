@@ -4,6 +4,7 @@ import (
 	"context"
 	pb "demo/api/gateway/interface/v1"
 	"demo/app/gateway/interface/internal/conf"
+	"demo/app/gateway/interface/internal/middlewares"
 	"demo/app/gateway/interface/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -25,12 +26,13 @@ func NewHTTPServer(c *conf.Server, gatewaySvc *service.GatewayService, logger lo
 					return nil
 				}),
 			),
+			tracing.Server(),
+			logging.Server(logger),
+			validate.Validator(),
 			metadata.Server(
 				metadata.WithPropagatedPrefix("x-app"),
 			),
-			logging.Server(logger),
-			validate.Validator(),
-			tracing.Server(),
+			middlewares.CheckToken(),
 		),
 	}
 	if c.Http.Network != "" {

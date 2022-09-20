@@ -5,18 +5,22 @@ import (
 
 	user "demo/api/user/service/v1"
 	"demo/app/gateway/interface/internal/biz"
+	"demo/app/gateway/interface/internal/conf"
+	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type userRepo struct {
 	data *Data
+	jwt  *jwt.Jwt
 	log  *log.Helper
 }
 
-func NewGatewayRepo(data *Data, logger log.Logger) biz.GatewayRepo {
+func NewGatewayRepo(data *Data, c *conf.Auth, logger log.Logger) biz.GatewayRepo {
 	return &userRepo{
 		data: data,
+		jwt:  jwt.New([]byte(c.Jwt.Key), c.Jwt.Issue),
 		log:  log.NewHelper(logger),
 	}
 }

@@ -5,6 +5,10 @@ server:
   tracer:
     jaeger:
       endpoint: http://127.0.0.1:14268/api/traces
+auth:
+  jwt:
+    key: demo
+    issue: panco
 data:
   mysql:
     source: root:0825@tcp(127.0.0.1:3306)/hi_friend
@@ -14,6 +18,3 @@ data:
     conn_lifetime: 3600s
   consul:
     address: 127.0.0.1:8500
-  jwt:
-    key: demo
-    issue: panco

@@ -11,14 +11,12 @@ import (
 
 type UserUsecase struct {
 	userRepo UserRepo
-	authRepo AuthRepo
 	log      *log.Helper
 }
 
-func NewUserUsecase(userRepo UserRepo, authRepo AuthRepo, logger log.Logger) *UserUsecase {
+func NewUserUsecase(userRepo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{
 		userRepo: userRepo,
-		authRepo: authRepo,
 		log:      log.NewHelper(logger),
 	}
 }
@@ -28,7 +26,7 @@ func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRe
 	if err != nil {
 		return nil, err
 	}
-	token, err := uc.authRepo.BuildToken(ctx, user.ID, time.Hour*24)
+	token, err := uc.userRepo.BuildToken(ctx, user.ID, time.Hour*24)
 	if err != nil {
 		return nil, err
 	}

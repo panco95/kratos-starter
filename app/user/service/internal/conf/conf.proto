@@ -8,6 +8,7 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
+  Auth auth = 3;
 }
 
 message Server {
@@ -45,11 +46,14 @@ message Data {
     string namespace = 8;
     string partition = 9;
   }
+  Database mysql = 1;
+  Consul consul = 2;
+}
+
+message Auth {
   message Jwt {
     string key = 1;
     string issue = 2;
   }
-  Database mysql = 1;
-  Consul consul = 2;
-  Jwt jwt = 3;
+  Jwt jwt = 1;
 }

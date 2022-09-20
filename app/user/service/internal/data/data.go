@@ -7,7 +7,6 @@ import (
 	"demo/app/user/service/internal/conf"
 	"demo/app/user/service/models"
 	"demo/pkg/database"
-	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -22,11 +21,10 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewAuthRepo)
+var ProviderSet = wire.NewSet(NewData, NewUserRepo)
 
 // Data .
 type Data struct {
-	Jwt        *jwt.Jwt
 	MysqlCli   *database.Client
 	ConsulCli  *consulApi.Client
 	UserSvcCli userPB.UserServiceClient
@@ -54,7 +52,6 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	data.SetupJwt(c)
 
 	return data, cleanup, nil
 }
@@ -99,12 +96,6 @@ func (data *Data) SetupMysql(c *conf.Data) error {
 	}
 	data.MysqlCli = client
 	return nil
-}
-
-// SetupJwt .
-func (data *Data) SetupJwt(c *conf.Data) {
-	jwt := jwt.New([]byte(c.Jwt.Key), c.Jwt.Issue)
-	data.Jwt = jwt
 }
 
 // SetupGRPCSvcCli .
