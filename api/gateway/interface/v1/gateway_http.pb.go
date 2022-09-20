@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,7 +26,7 @@ const OperationGatewayInterfaceRegister = "/demo.gateway.v1.GatewayInterface/Reg
 
 type GatewayInterfaceHTTPServer interface {
 	Login(context.Context, *LoginReq) (*LoginReply, error)
-	Logout(context.Context, *LogoutReq) (*LogoutReply, error)
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 }
 
@@ -76,26 +77,26 @@ func _GatewayInterface_Login0_HTTP_Handler(srv GatewayInterfaceHTTPServer) func(
 
 func _GatewayInterface_Logout0_HTTP_Handler(srv GatewayInterfaceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in LogoutReq
+		var in emptypb.Empty
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationGatewayInterfaceLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Logout(ctx, req.(*LogoutReq))
+			return srv.Logout(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*LogoutReply)
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
 type GatewayInterfaceHTTPClient interface {
 	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *LoginReply, err error)
-	Logout(ctx context.Context, req *LogoutReq, opts ...http.CallOption) (rsp *LogoutReply, err error)
+	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
@@ -120,8 +121,8 @@ func (c *GatewayInterfaceHTTPClientImpl) Login(ctx context.Context, in *LoginReq
 	return &out, err
 }
 
-func (c *GatewayInterfaceHTTPClientImpl) Logout(ctx context.Context, in *LogoutReq, opts ...http.CallOption) (*LogoutReply, error) {
-	var out LogoutReply
+func (c *GatewayInterfaceHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
 	pattern := "/v1/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGatewayInterfaceLogout))

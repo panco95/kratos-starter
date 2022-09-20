@@ -11,6 +11,7 @@ import (
 
 type GatewayRepo interface {
 	Login(context.Context, *user.LoginReq) (*user.LoginReply, error)
+	Register(context.Context, *user.RegisterReq) (*user.RegisterReply, error)
 }
 
 type GatewayUsecase struct {
@@ -35,4 +36,23 @@ func (uc *GatewayUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.Logi
 		Token: res.Token,
 	}
 	return reply, nil
+}
+
+func (uc *GatewayUsecase) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterReply, error) {
+	res, err := uc.repo.Register(ctx, &user.RegisterReq{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &pb.RegisterReply{
+		Token: res.Token,
+	}
+	return reply, nil
+}
+
+func (uc *GatewayUsecase) Logout(ctx context.Context) error {
+	return nil
 }

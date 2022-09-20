@@ -31,17 +31,12 @@ paths:
             operationId: GatewayInterface_Logout
             requestBody:
                 content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/demo.gateway.v1.LogoutReq'
+                    application/json: {}
                 required: true
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/demo.gateway.v1.LogoutReply'
+                    content: {}
     /v1/register:
         post:
             tags:
@@ -74,12 +69,6 @@ components:
                     type: string
                 password:
                     type: string
-        demo.gateway.v1.LogoutReply:
-            type: object
-            properties: {}
-        demo.gateway.v1.LogoutReq:
-            type: object
-            properties: {}
         demo.gateway.v1.RegisterReply:
             type: object
             properties:

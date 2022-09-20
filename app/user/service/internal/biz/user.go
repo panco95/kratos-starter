@@ -36,3 +36,19 @@ func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRe
 	}
 	return reply, nil
 }
+
+func (uc *UserUsecase) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterReply, error) {
+	user, err := uc.userRepo.FindByUsername(ctx, req.Username)
+	if err != nil {
+		return nil, err
+	}
+	token, err := uc.userRepo.BuildToken(ctx, user.ID, time.Hour*24)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := &pb.RegisterReply{
+		Token: token,
+	}
+	return reply, nil
+}
