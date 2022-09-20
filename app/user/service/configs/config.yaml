@@ -14,3 +14,6 @@ data:
     conn_lifetime: 3600s
   consul:
     address: 127.0.0.1:8500
+  jwt:
+    key: demo
+    issue: panco

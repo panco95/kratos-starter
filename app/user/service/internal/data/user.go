@@ -2,11 +2,9 @@ package data
 
 import (
 	"context"
-	"time"
 
-	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/biz"
-	"demo/pkg/jwt"
+	"demo/app/user/service/models"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -23,14 +21,18 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
-func (r *userRepo) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
-	jwtClass := jwt.New([]byte("demo"), "panco")
-	token, err := jwtClass.BuildToken(1, time.Hour*24)
+func (r *userRepo) FindByUsername(ctx context.Context, username string) (*models.User, error) {
+	user := &models.User{}
+	db := r.data.MysqlCli.Db().WithContext(ctx)
+	err := db.Model(&models.User{}).
+		Where("username = ?", username).
+		First(user).
+		Error
 	if err != nil {
 		return nil, err
 	}
-	reply := &pb.LoginReply{
-		Token: token,
+	if user.ID == 0 {
+		return nil, biz.ErrUserNotFound
 	}
-	return reply, nil
+	return user, nil
 }

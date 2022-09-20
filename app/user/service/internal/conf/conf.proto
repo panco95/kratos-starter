@@ -45,6 +45,11 @@ message Data {
     string namespace = 8;
     string partition = 9;
   }
+  message Jwt {
+    string key = 1;
+    string issue = 2;
+  }
   Database mysql = 1;
   Consul consul = 2;
+  Jwt jwt = 3;
 }
