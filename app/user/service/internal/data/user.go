@@ -23,6 +23,22 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
+func (r *userRepo) FindByUserId(ctx context.Context, userId uint) (*models.User, error) {
+	user := &models.User{}
+	db := r.data.MysqlCli.Db().WithContext(ctx)
+	err := db.Model(&models.User{}).
+		Where("id = ?", userId).
+		First(user).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	if user.ID == 0 {
+		return nil, errors.ErrUserNotFound
+	}
+	return user, nil
+}
+
 func (r *userRepo) FindByUsername(ctx context.Context, username string) (*models.User, error) {
 	user := &models.User{}
 	db := r.data.MysqlCli.Db().WithContext(ctx)

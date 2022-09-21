@@ -4,7 +4,9 @@ import (
 	"context"
 	"demo/app/gateway/interface/internal/errors"
 	"demo/pkg/jwt"
+	"fmt"
 
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
 )
@@ -18,6 +20,7 @@ func CheckToken(jwt *jwt.Jwt) middleware.Middleware {
 				if id == 0 {
 					return nil, errors.UNAUTHORIZED
 				}
+				ctx = metadata.AppendToClientContext(ctx, "x-app-global-userId", fmt.Sprintf("%d", id))
 
 				defer func() {
 				}()

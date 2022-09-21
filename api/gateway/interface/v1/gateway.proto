@@ -11,21 +11,21 @@ option go_package = "api/gateway/v1;v1";
 service GatewayInterface {
     rpc Register (RegisterReq) returns (RegisterReply) {
         option (google.api.http) = {
-            post: "/v1/register"
+            post: "/api/v1/register"
             body: "*"
         };
     }
 
     rpc Login (LoginReq) returns (LoginReply) {
         option (google.api.http) = {
-            post: "/v1/login"
+            post: "/api/v1/login"
             body: "*"
         };
     }
 
     rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-            post: "/v1/logout"
+            post: "/api/v1/logout"
             body: "*"
         };
     }

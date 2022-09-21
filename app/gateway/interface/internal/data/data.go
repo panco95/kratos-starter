@@ -10,6 +10,7 @@ import (
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/wrr"
@@ -82,6 +83,7 @@ func (data *Data) SetupGRPCSvcCli(logger log.Logger) error {
 		grpc.WithMiddleware(
 			logging.Client(logger),
 			tracing.Client(),
+			metadata.Client(),
 		),
 		grpc.WithDiscovery(
 			consul.New(data.ConsulCli),

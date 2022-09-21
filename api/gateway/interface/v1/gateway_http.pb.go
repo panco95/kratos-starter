@@ -32,9 +32,9 @@ type GatewayInterfaceHTTPServer interface {
 
 func RegisterGatewayInterfaceHTTPServer(s *http.Server, srv GatewayInterfaceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/v1/register", _GatewayInterface_Register0_HTTP_Handler(srv))
-	r.POST("/v1/login", _GatewayInterface_Login0_HTTP_Handler(srv))
-	r.POST("/v1/logout", _GatewayInterface_Logout0_HTTP_Handler(srv))
+	r.POST("/api/v1/register", _GatewayInterface_Register0_HTTP_Handler(srv))
+	r.POST("/api/v1/login", _GatewayInterface_Login0_HTTP_Handler(srv))
+	r.POST("/api/v1/logout", _GatewayInterface_Logout0_HTTP_Handler(srv))
 }
 
 func _GatewayInterface_Register0_HTTP_Handler(srv GatewayInterfaceHTTPServer) func(ctx http.Context) error {
@@ -110,7 +110,7 @@ func NewGatewayInterfaceHTTPClient(client *http.Client) GatewayInterfaceHTTPClie
 
 func (c *GatewayInterfaceHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
-	pattern := "/v1/login"
+	pattern := "/api/v1/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGatewayInterfaceLogin))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -123,7 +123,7 @@ func (c *GatewayInterfaceHTTPClientImpl) Login(ctx context.Context, in *LoginReq
 
 func (c *GatewayInterfaceHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/v1/logout"
+	pattern := "/api/v1/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGatewayInterfaceLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -136,7 +136,7 @@ func (c *GatewayInterfaceHTTPClientImpl) Logout(ctx context.Context, in *emptypb
 
 func (c *GatewayInterfaceHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opts ...http.CallOption) (*RegisterReply, error) {
 	var out RegisterReply
-	pattern := "/v1/register"
+	pattern := "/api/v1/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationGatewayInterfaceRegister))
 	opts = append(opts, http.PathTemplate(pattern))

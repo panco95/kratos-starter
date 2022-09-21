@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"strconv"
 
 	pb "demo/api/user/service/v1"
 	"demo/app/user/service/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -41,5 +43,18 @@ func (s *UserService) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Re
 }
 
 func (s *UserService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	userIdString := "0"
+	if md, ok := metadata.FromServerContext(ctx); ok {
+		userIdString = md.Get("x-app-global-userId")
+	}
+	userId, err := strconv.Atoi(userIdString)
+	if err != nil {
+		return nil, err
+	}
+	err = s.uc.Logout(ctx, uint(userId))
+	if err != nil {
+		return nil, err
+	}
+
 	return &emptypb.Empty{}, nil
 }

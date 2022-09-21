@@ -6,7 +6,7 @@ info:
     title: GatewayInterface API
     version: 0.0.1
 paths:
-    /v1/login:
+    /api/v1/login:
         post:
             tags:
                 - GatewayInterface
@@ -24,7 +24,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/demo.gateway.v1.LoginReply'
-    /v1/logout:
+    /api/v1/logout:
         post:
             tags:
                 - GatewayInterface
@@ -37,7 +37,7 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /v1/register:
+    /api/v1/register:
         post:
             tags:
                 - GatewayInterface

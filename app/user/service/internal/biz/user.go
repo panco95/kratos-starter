@@ -52,3 +52,12 @@ func (uc *UserUsecase) Register(ctx context.Context, req *pb.RegisterReq) (*pb.R
 	}
 	return reply, nil
 }
+
+func (uc *UserUsecase) Logout(ctx context.Context, userId uint) error {
+	user, err := uc.userRepo.FindByUserId(ctx, uint(userId))
+	if err != nil {
+		return err
+	}
+	user.UpdatedAt = time.Now()
+	return nil
+}
