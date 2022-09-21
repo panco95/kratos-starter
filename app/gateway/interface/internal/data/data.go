@@ -5,6 +5,7 @@ import (
 
 	userPB "demo/api/user/service/v1"
 	"demo/app/gateway/interface/internal/conf"
+	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -24,19 +25,22 @@ var ProviderSet = wire.NewSet(NewData, NewGatewayRepo)
 type Data struct {
 	ConsulCli  *consulApi.Client
 	UserSvcCli userPB.UserServiceClient
+	Jwt        *jwt.Jwt
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewData(dataConf *conf.Data, authConf *conf.Auth, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 	var (
 		err  error
-		data = &Data{}
+		data = &Data{
+			Jwt: jwt.New([]byte(authConf.Jwt.Key), authConf.Jwt.Issue),
+		}
 	)
 
-	err = data.SetupConsul(c)
+	err = data.SetupConsul(dataConf)
 	if err != nil {
 		return nil, nil, err
 	}

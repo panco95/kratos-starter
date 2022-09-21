@@ -7,6 +7,7 @@ import (
 	"demo/app/user/service/internal/conf"
 	"demo/app/user/service/models"
 	"demo/pkg/database"
+	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -27,24 +28,27 @@ var ProviderSet = wire.NewSet(NewData, NewUserRepo)
 type Data struct {
 	MysqlCli   *database.Client
 	ConsulCli  *consulApi.Client
+	Jwt        *jwt.Jwt
 	UserSvcCli userPB.UserServiceClient
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewData(confData *conf.Data, confAuth *conf.Auth, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 	var (
 		err  error
-		data = &Data{}
+		data = &Data{
+			Jwt: jwt.New([]byte(confAuth.Jwt.Key), confAuth.Jwt.Issue),
+		}
 	)
 
-	err = data.SetupConsul(c)
+	err = data.SetupConsul(confData)
 	if err != nil {
 		return nil, nil, err
 	}
-	err = data.SetupMysql(c)
+	err = data.SetupMysql(confData)
 	if err != nil {
 		return nil, nil, err
 	}

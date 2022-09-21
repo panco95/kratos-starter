@@ -7,7 +7,6 @@
 package main
 
 import (
-	"demo/app/gateway/interface/internal/biz"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/data"
 	"demo/app/gateway/interface/internal/server"
@@ -20,14 +19,13 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	dataData, cleanup, err := data.NewData(confData, auth, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	gatewayRepo := data.NewGatewayRepo(dataData, auth, logger)
-	gatewayUsecase := biz.NewGatewayUsecase(gatewayRepo, logger)
-	gatewayService := service.NewGatewayService(gatewayUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, gatewayService, logger)
+	gatewayRepo := data.NewGatewayRepo(dataData, logger)
+	gatewayService := service.NewGatewayService(gatewayRepo, logger)
+	httpServer := server.NewHTTPServer(confServer, dataData, gatewayService, logger)
 	app := newApp(logger, confServer, dataData, httpServer)
 	return app, func() {
 		cleanup()

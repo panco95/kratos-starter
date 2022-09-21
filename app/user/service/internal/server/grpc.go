@@ -30,8 +30,8 @@ func NewGRPCServer(c *conf.Server, userSvc *service.UserService, logger log.Logg
 				metadata.WithPropagatedPrefix("x-app"),
 			),
 			logging.Server(logger),
-			validate.Validator(),
 			tracing.Server(),
+			validate.Validator(),
 		),
 	}
 	if c.Grpc.Network != "" {

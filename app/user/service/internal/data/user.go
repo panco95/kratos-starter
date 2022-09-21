@@ -5,23 +5,20 @@ import (
 	"time"
 
 	"demo/app/user/service/internal/biz"
-	"demo/app/user/service/internal/conf"
+	"demo/app/user/service/internal/errors"
 	"demo/app/user/service/models"
-	"demo/pkg/jwt"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type userRepo struct {
 	data *Data
-	jwt  *jwt.Jwt
 	log  *log.Helper
 }
 
-func NewUserRepo(data *Data, c *conf.Auth, logger log.Logger) biz.UserRepo {
+func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	return &userRepo{
 		data: data,
-		jwt:  jwt.New([]byte(c.Jwt.Key), c.Jwt.Issue),
 		log:  log.NewHelper(logger),
 	}
 }
@@ -37,13 +34,13 @@ func (r *userRepo) FindByUsername(ctx context.Context, username string) (*models
 		return nil, err
 	}
 	if user.ID == 0 {
-		return nil, biz.ErrUserNotFound
+		return nil, errors.ErrUserNotFound
 	}
 	return user, nil
 }
 
 func (r *userRepo) BuildToken(ctx context.Context, id uint, expire time.Duration) (string, error) {
-	token, err := r.jwt.BuildToken(id, expire)
+	token, err := r.data.Jwt.BuildToken(id, expire)
 	if err != nil {
 		return "", err
 	}

@@ -5,7 +5,6 @@
 package main
 
 import (
-	"demo/app/gateway/interface/internal/biz"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/data"
 	"demo/app/gateway/interface/internal/server"
@@ -18,5 +17,5 @@ import (
 
 // wireApp init kratos application.
 func wireApp(*conf.Server, *conf.Data, *conf.Auth, log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
+	panic(wire.Build(server.ProviderSet, data.ProviderSet, service.ProviderSet, newApp))
 }

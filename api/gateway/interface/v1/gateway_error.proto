@@ -10,5 +10,5 @@ enum ErrorReason {
   // 设置缺省错误码
   option (errors.default_code) = 500;
 
-  ACCOUNT_NOT_FOUND = 0 [(errors.code) = 404];
+  UNAUTHORIZED = 0 [(errors.code) = 401];
 }
