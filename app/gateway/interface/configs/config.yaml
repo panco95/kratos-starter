@@ -1,4 +1,7 @@
 server:
+  info:
+    project: demo
+    name: gateway.interface
   http:
     addr: 0.0.0.0:9001
     timeout: 1s

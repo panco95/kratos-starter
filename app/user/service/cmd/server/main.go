@@ -21,16 +21,12 @@ import (
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
-	// Name is the name of the compiled software.
-	Name string = "demo.user.service"
-	// Version is the version of the compiled software.
-	Version string = "v1.0.0"
-	// flagconf is the config flag.
-	flagconf string
-	// flaglogpath is the log path.
+	Project     string = ""
+	Name        string = ""
+	Version     string = "v1.0.0"
+	flagconf    string
 	flaglogpath string
-
-	id string
+	id          string
 )
 
 func init() {
@@ -39,6 +35,8 @@ func init() {
 }
 
 func newApp(logger log.Logger, c *conf.Server, data *data.Data, gs *grpc.Server) *kratos.App {
+	Project = c.Info.Project
+	Name = Project + "." + c.Info.Name
 	id = Name + "#" + c.Grpc.Addr
 	return kratos.New(
 		kratos.ID(id),

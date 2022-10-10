@@ -1,4 +1,7 @@
 server:
+  info:
+    project: demo
+    name: user.service
   grpc:
     addr: 0.0.0.0:9002
     timeout: 1s

@@ -12,6 +12,10 @@ message Bootstrap {
 }
 
 message Server {
+  message Info {
+    string project = 1;
+    string name = 2;
+  }
   message GRPC {
     string network = 1;
     string addr = 2;
@@ -25,6 +29,7 @@ message Server {
   }
   GRPC grpc = 1;
   Tracer tracer = 2;
+  Info info = 3;
 }
 
 message Data {

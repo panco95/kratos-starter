@@ -23,9 +23,23 @@ func CheckToken(jwt *jwt.Jwt) middleware.Middleware {
 				ctx = metadata.AppendToClientContext(ctx, "x-app-global-userId", fmt.Sprintf("%d", id))
 
 				defer func() {
+					refreshToken, _ := jwt.BuildToken(id, 3600)
+					tr.ReplyHeader().Set("x-app-global-refreshToken", refreshToken)
 				}()
 			}
 			return handler(ctx, req)
+		}
+	}
+}
+
+func CheckTokenRoute(project string) func(context.Context, string) bool {
+	return func(ctx context.Context, operation string) bool {
+		prefix := "/" + project + "."
+		if operation == prefix+"gateway.v1.GatewayInterface/Login" ||
+			operation == prefix+"gateway.v1.GatewayInterface/Register" {
+			return false
+		} else {
+			return true
 		}
 	}
 }

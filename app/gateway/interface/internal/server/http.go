@@ -37,7 +37,7 @@ func NewHTTPServer(c *conf.Server, data *data.Data, gatewaySvc *service.GatewayS
 				recovery.Recovery(),
 				tracing.Server(),
 				middlewares.CheckToken(data.Jwt),
-			).Match(CheckTokenRoute).Build(),
+			).Match(middlewares.CheckTokenRoute(c.Info.Project)).Build(),
 			validate.Validator(),
 		),
 	}
@@ -53,13 +53,4 @@ func NewHTTPServer(c *conf.Server, data *data.Data, gatewaySvc *service.GatewayS
 	srv := http.NewServer(opts...)
 	pb.RegisterGatewayInterfaceHTTPServer(srv, gatewaySvc)
 	return srv
-}
-
-func CheckTokenRoute(ctx context.Context, operation string) bool {
-	if operation == "/demo.gateway.v1.GatewayInterface/Login" ||
-		operation == "/demo.gateway.v1.GatewayInterface/Register" {
-		return false
-	} else {
-		return true
-	}
 }
