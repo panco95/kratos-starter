@@ -30,7 +30,7 @@ type Data struct {
 }
 
 // NewData .
-func NewData(dataConf *conf.Data, authConf *conf.Auth, logger log.Logger) (*Data, func(), error) {
+func NewData(dataConf *conf.Data, authConf *conf.Auth, serverConf *conf.Server, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
@@ -45,7 +45,7 @@ func NewData(dataConf *conf.Data, authConf *conf.Auth, logger log.Logger) (*Data
 	if err != nil {
 		return nil, nil, err
 	}
-	err = data.SetupGRPCSvcCli(logger)
+	err = data.SetupGRPCSvcCli(serverConf, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -74,9 +74,9 @@ func (data *Data) SetupConsul(c *conf.Data) error {
 }
 
 // SetupGRPCSvcCli .
-func (data *Data) SetupGRPCSvcCli(logger log.Logger) error {
+func (data *Data) SetupGRPCSvcCli(serverConf *conf.Server, logger log.Logger) error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
-	endpoint := "discovery:///app.user.service"
+	endpoint := "discovery:///" + serverConf.Info.Project + ".user.service"
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(endpoint),
