@@ -99,3 +99,31 @@ func (r *userRepo) CreateUser(ctx context.Context, user *models.User) (*models.U
 	}
 	return user, nil
 }
+
+func (r *userRepo) Login(ctx context.Context, req *models.User) (*models.User, error) {
+	user, err := r.FindUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if !bcrypt.Match(req.Password, user.Password) {
+		return nil, errors.PasswordError
+	}
+
+	go func() {
+		user.LoginTimes++
+		if md, ok := metadata.FromServerContext(ctx); ok {
+			user.LastLoginIp = md.Get("x-app-global-requestIP")
+		}
+		now := time.Now()
+		user.LastLoginTime = &now
+		err = r.data.MysqlCli.Db().
+			Model(user).
+			Select("login_times", "last_login_time", "last_login_ip").
+			Updates(user).Error
+		if err != nil {
+			r.log.Errorf("login update user %v", err)
+		}
+	}()
+
+	return user, nil
+}

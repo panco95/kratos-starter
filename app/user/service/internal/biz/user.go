@@ -23,7 +23,7 @@ func NewUserUsecase(userRepo UserRepo, logger log.Logger) *UserUsecase {
 }
 
 func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
-	user, err := uc.userRepo.FindUser(ctx, &models.User{Username: req.Username})
+	user, err := uc.userRepo.Login(ctx, &models.User{Username: req.Username, Password: req.Password})
 	if err != nil {
 		return nil, err
 	}

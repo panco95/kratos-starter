@@ -13,4 +13,5 @@ enum ErrorReason {
   USER_NOT_FOUND = 0 [(errors.code) = 500];
   USER_EXISTS = 1 [(errors.code) = 500];
   USERNAME_HAS_CHINESE = 3 [(errors.code) = 500];
+  PASSWORD_ERROR = 4 [(errors.code) = 500];
 }

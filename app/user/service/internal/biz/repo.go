@@ -12,4 +12,5 @@ type UserRepo interface {
 	FindUser(context.Context, *models.User) (*models.User, error)
 	ExistsUser(context.Context, *models.User) (bool, error)
 	CreateUser(context.Context, *models.User) (*models.User, error)
+	Login(context.Context, *models.User) (*models.User, error)
 }

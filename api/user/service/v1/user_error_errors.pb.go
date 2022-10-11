@@ -46,3 +46,15 @@ func IsUsernameHasChinese(err error) bool {
 func ErrorUsernameHasChinese(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_USERNAME_HAS_CHINESE.String(), fmt.Sprintf(format, args...))
 }
+
+func IsPasswordError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_PASSWORD_ERROR.String() && e.Code == 500
+}
+
+func ErrorPasswordError(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_PASSWORD_ERROR.String(), fmt.Sprintf(format, args...))
+}
