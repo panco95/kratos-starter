@@ -8,7 +8,6 @@ import (
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 
 	"demo/app/user/service/internal/conf"
@@ -73,8 +72,8 @@ func main() {
 		"service.id", id,
 		"service.name", Name,
 		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
+		// "trace.id", tracing.TraceID(),
+		// "span.id", tracing.SpanID(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 	)

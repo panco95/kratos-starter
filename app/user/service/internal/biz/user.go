@@ -5,6 +5,7 @@ import (
 	"time"
 
 	pb "demo/api/user/service/v1"
+	"demo/app/user/service/models"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -22,7 +23,7 @@ func NewUserUsecase(userRepo UserRepo, logger log.Logger) *UserUsecase {
 }
 
 func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginReply, error) {
-	user, err := uc.userRepo.FindByUsername(ctx, req.Username)
+	user, err := uc.userRepo.FindUser(ctx, &models.User{Username: req.Username})
 	if err != nil {
 		return nil, err
 	}
@@ -38,11 +39,14 @@ func (uc *UserUsecase) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRe
 }
 
 func (uc *UserUsecase) Register(ctx context.Context, req *pb.RegisterReq) (*pb.RegisterReply, error) {
-	user, err := uc.userRepo.FindByUsername(ctx, req.Username)
+	user, err := uc.userRepo.CreateUser(ctx, &models.User{
+		Username: req.Username,
+		Password: req.Password,
+	})
 	if err != nil {
 		return nil, err
 	}
-	token, err := uc.userRepo.BuildToken(ctx, user.ID, time.Hour*24)
+	token, err := uc.userRepo.BuildToken(ctx, user.ID, time.Hour*24*31)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +58,7 @@ func (uc *UserUsecase) Register(ctx context.Context, req *pb.RegisterReq) (*pb.R
 }
 
 func (uc *UserUsecase) Logout(ctx context.Context, userId uint) error {
-	user, err := uc.userRepo.FindByUserId(ctx, uint(userId))
+	user, err := uc.userRepo.FindUser(ctx, &models.User{Model: models.Model{ID: userId}})
 	if err != nil {
 		return err
 	}

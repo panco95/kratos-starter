@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+
 	pb "demo/api/gateway/interface/v1"
 	"demo/app/gateway/interface/internal/conf"
 	"demo/app/gateway/interface/internal/data"
@@ -21,6 +22,7 @@ import (
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(c *conf.Server, data *data.Data, gatewaySvc *service.GatewayService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
+		http.RequestDecoder(transmitRequestDecoder),
 		http.Middleware(
 			recovery.Recovery(
 				recovery.WithLogger(logger),
@@ -33,6 +35,7 @@ func NewHTTPServer(c *conf.Server, data *data.Data, gatewaySvc *service.GatewayS
 			metadata.Server(
 				metadata.WithPropagatedPrefix("x-app"),
 			),
+			middlewares.Transmit(),
 			selector.Server(
 				recovery.Recovery(),
 				tracing.Server(),

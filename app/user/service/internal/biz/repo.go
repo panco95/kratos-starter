@@ -7,7 +7,9 @@ import (
 )
 
 type UserRepo interface {
-	FindByUsername(context.Context, string) (*models.User, error)
-	FindByUserId(context.Context, uint) (*models.User, error)
-	BuildToken(ctx context.Context, id uint, expire time.Duration) (string, error)
+	BuildToken(context.Context, uint, time.Duration) (string, error)
+	QueryUser(context.Context, *models.User) (*models.User, error)
+	FindUser(context.Context, *models.User) (*models.User, error)
+	ExistsUser(context.Context, *models.User) (bool, error)
+	CreateUser(context.Context, *models.User) (*models.User, error)
 }

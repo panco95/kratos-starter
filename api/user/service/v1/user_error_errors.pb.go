@@ -22,3 +22,27 @@ func IsUserNotFound(err error) bool {
 func ErrorUserNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, ErrorReason_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
+
+func IsUserExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USER_EXISTS.String() && e.Code == 500
+}
+
+func ErrorUserExists(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USER_EXISTS.String(), fmt.Sprintf(format, args...))
+}
+
+func IsUsernameHasChinese(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_USERNAME_HAS_CHINESE.String() && e.Code == 500
+}
+
+func ErrorUsernameHasChinese(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, ErrorReason_USERNAME_HAS_CHINESE.String(), fmt.Sprintf(format, args...))
+}
