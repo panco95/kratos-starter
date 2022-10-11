@@ -4,8 +4,8 @@ import (
 	"context"
 	"strconv"
 
-	pb "demo/api/user/service/v1"
-	"demo/app/user/service/internal/biz"
+	pb "app/api/user/service/v1"
+	"app/app/user/service/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"

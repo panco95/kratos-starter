@@ -20,9 +20,9 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationGatewayInterfaceLogin = "/demo.gateway.v1.GatewayInterface/Login"
-const OperationGatewayInterfaceLogout = "/demo.gateway.v1.GatewayInterface/Logout"
-const OperationGatewayInterfaceRegister = "/demo.gateway.v1.GatewayInterface/Register"
+const OperationGatewayInterfaceLogin = "/app.gateway.v1.GatewayInterface/Login"
+const OperationGatewayInterfaceLogout = "/app.gateway.v1.GatewayInterface/Logout"
+const OperationGatewayInterfaceRegister = "/app.gateway.v1.GatewayInterface/Register"
 
 type GatewayInterfaceHTTPServer interface {
 	Login(context.Context, *LoginReq) (*LoginReply, error)

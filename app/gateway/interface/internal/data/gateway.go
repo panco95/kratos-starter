@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	user "demo/api/user/service/v1"
+	user "app/api/user/service/v1"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"

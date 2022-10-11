@@ -3,11 +3,11 @@ package data
 import (
 	"context"
 
-	userPB "demo/api/user/service/v1"
-	"demo/app/user/service/internal/conf"
-	"demo/app/user/service/models"
-	"demo/pkg/database"
-	"demo/pkg/jwt"
+	userPB "app/api/user/service/v1"
+	"app/app/user/service/internal/conf"
+	"app/app/user/service/models"
+	"app/pkg/database"
+	"app/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -105,7 +105,7 @@ func (data *Data) SetupMysql(c *conf.Data) error {
 // SetupGRPCSvcCli .
 func (data *Data) SetupGRPCSvcCli(logger log.Logger) error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
-	endpoint := "discovery:///demo.user.service"
+	endpoint := "discovery:///app.user.service"
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(endpoint),

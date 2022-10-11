@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	pb "demo/api/user/service/v1"
-	"demo/app/user/service/internal/conf"
-	"demo/app/user/service/internal/service"
+	pb "app/api/user/service/v1"
+	"app/app/user/service/internal/conf"
+	"app/app/user/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"

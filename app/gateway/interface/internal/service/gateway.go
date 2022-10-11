@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	pb "demo/api/gateway/interface/v1"
-	user "demo/api/user/service/v1"
-	"demo/app/gateway/interface/internal/data"
+	pb "app/api/gateway/interface/v1"
+	user "app/api/user/service/v1"
+	"app/app/gateway/interface/internal/data"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"

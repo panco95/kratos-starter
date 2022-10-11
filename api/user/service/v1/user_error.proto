@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package demo.user.v1;
+package app.user.v1;
 
 import "errors/errors.proto";
 

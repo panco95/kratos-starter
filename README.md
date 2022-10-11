@@ -1,4 +1,4 @@
-# Micro Service Demo (Kratos template)
+# Micro Service Starter
 
 Run Server:
 - cd app/gateway/interface && kratos run
@@ -13,3 +13,7 @@ Make:
 Wire Inject:
 - cd app/gateway/interface/cmd/server && wire
 - cd app/user/service/cmd/server && wire
+
+Build & Run:
+- make build
+- ./server -conf configs/config.yml -log logs

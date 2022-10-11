@@ -38,7 +38,7 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 
 func (c *userServiceClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
 	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/demo.user.v1.UserService/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.user.v1.UserService/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *userServiceClient) Register(ctx context.Context, in *RegisterReq, opts 
 
 func (c *userServiceClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
 	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, "/demo.user.v1.UserService/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.user.v1.UserService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginReq, opts ...grp
 
 func (c *userServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/demo.user.v1.UserService/Logout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.user.v1.UserService/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.user.v1.UserService/Register",
+		FullMethod: "/app.user.v1.UserService/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Register(ctx, req.(*RegisterReq))
@@ -127,7 +127,7 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.user.v1.UserService/Login",
+		FullMethod: "/app.user.v1.UserService/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Login(ctx, req.(*LoginReq))
@@ -145,7 +145,7 @@ func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.user.v1.UserService/Logout",
+		FullMethod: "/app.user.v1.UserService/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Logout(ctx, req.(*emptypb.Empty))
@@ -157,7 +157,7 @@ func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "demo.user.v1.UserService",
+	ServiceName: "app.user.v1.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"demo/app/user/service/internal/biz"
-	"demo/app/user/service/internal/errors"
-	"demo/app/user/service/models"
-	"demo/pkg/utils"
+	"app/app/user/service/internal/biz"
+	"app/app/user/service/internal/errors"
+	"app/app/user/service/models"
+	"app/pkg/utils"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"

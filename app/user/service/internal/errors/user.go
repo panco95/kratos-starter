@@ -1,7 +1,7 @@
 package errors
 
 import (
-	v1 "demo/api/user/service/v1"
+	v1 "app/api/user/service/v1"
 )
 
 var (

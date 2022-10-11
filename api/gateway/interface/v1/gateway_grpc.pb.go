@@ -38,7 +38,7 @@ func NewGatewayInterfaceClient(cc grpc.ClientConnInterface) GatewayInterfaceClie
 
 func (c *gatewayInterfaceClient) Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterReply, error) {
 	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/demo.gateway.v1.GatewayInterface/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.gateway.v1.GatewayInterface/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *gatewayInterfaceClient) Register(ctx context.Context, in *RegisterReq, 
 
 func (c *gatewayInterfaceClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginReply, error) {
 	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, "/demo.gateway.v1.GatewayInterface/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.gateway.v1.GatewayInterface/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *gatewayInterfaceClient) Login(ctx context.Context, in *LoginReq, opts .
 
 func (c *gatewayInterfaceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/demo.gateway.v1.GatewayInterface/Logout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/app.gateway.v1.GatewayInterface/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func _GatewayInterface_Register_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.gateway.v1.GatewayInterface/Register",
+		FullMethod: "/app.gateway.v1.GatewayInterface/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GatewayInterfaceServer).Register(ctx, req.(*RegisterReq))
@@ -127,7 +127,7 @@ func _GatewayInterface_Login_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.gateway.v1.GatewayInterface/Login",
+		FullMethod: "/app.gateway.v1.GatewayInterface/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GatewayInterfaceServer).Login(ctx, req.(*LoginReq))
@@ -145,7 +145,7 @@ func _GatewayInterface_Logout_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/demo.gateway.v1.GatewayInterface/Logout",
+		FullMethod: "/app.gateway.v1.GatewayInterface/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GatewayInterfaceServer).Logout(ctx, req.(*emptypb.Empty))
@@ -157,7 +157,7 @@ func _GatewayInterface_Logout_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var GatewayInterface_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "demo.gateway.v1.GatewayInterface",
+	ServiceName: "app.gateway.v1.GatewayInterface",
 	HandlerType: (*GatewayInterfaceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

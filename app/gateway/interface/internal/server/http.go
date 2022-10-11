@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 
-	pb "demo/api/gateway/interface/v1"
-	"demo/app/gateway/interface/internal/conf"
-	"demo/app/gateway/interface/internal/data"
-	"demo/app/gateway/interface/internal/middlewares"
-	"demo/app/gateway/interface/internal/service"
+	pb "app/api/gateway/interface/v1"
+	"app/app/gateway/interface/internal/conf"
+	"app/app/gateway/interface/internal/data"
+	"app/app/gateway/interface/internal/middlewares"
+	"app/app/gateway/interface/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"

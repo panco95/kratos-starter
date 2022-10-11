@@ -15,7 +15,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/demo.gateway.v1.LoginReq'
+                            $ref: '#/components/schemas/app.gateway.v1.LoginReq'
                 required: true
             responses:
                 "200":
@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/demo.gateway.v1.LoginReply'
+                                $ref: '#/components/schemas/app.gateway.v1.LoginReply'
     /api/v1/logout:
         post:
             tags:
@@ -46,7 +46,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/demo.gateway.v1.RegisterReq'
+                            $ref: '#/components/schemas/app.gateway.v1.RegisterReq'
                 required: true
             responses:
                 "200":
@@ -54,27 +54,27 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/demo.gateway.v1.RegisterReply'
+                                $ref: '#/components/schemas/app.gateway.v1.RegisterReply'
 components:
     schemas:
-        demo.gateway.v1.LoginReply:
+        app.gateway.v1.LoginReply:
             type: object
             properties:
                 token:
                     type: string
-        demo.gateway.v1.LoginReq:
+        app.gateway.v1.LoginReq:
             type: object
             properties:
                 username:
                     type: string
                 password:
                     type: string
-        demo.gateway.v1.RegisterReply:
+        app.gateway.v1.RegisterReply:
             type: object
             properties:
                 token:
                     type: string
-        demo.gateway.v1.RegisterReq:
+        app.gateway.v1.RegisterReq:
             type: object
             properties:
                 username:

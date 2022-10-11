@@ -1,9 +1,9 @@
 package middlewares
 
 import (
+	"app/app/gateway/interface/internal/errors"
+	"app/pkg/jwt"
 	"context"
-	"demo/app/gateway/interface/internal/errors"
-	"demo/pkg/jwt"
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/metadata"

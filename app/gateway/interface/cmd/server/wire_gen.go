@@ -7,10 +7,10 @@
 package main
 
 import (
-	"demo/app/gateway/interface/internal/conf"
-	"demo/app/gateway/interface/internal/data"
-	"demo/app/gateway/interface/internal/server"
-	"demo/app/gateway/interface/internal/service"
+	"app/app/gateway/interface/internal/conf"
+	"app/app/gateway/interface/internal/data"
+	"app/app/gateway/interface/internal/server"
+	"app/app/gateway/interface/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )

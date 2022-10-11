@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	pb "demo/api/user/service/v1"
-	"demo/app/user/service/models"
+	pb "app/api/user/service/v1"
+	"app/app/user/service/models"
 
 	"github.com/go-kratos/kratos/v2/log"
 )

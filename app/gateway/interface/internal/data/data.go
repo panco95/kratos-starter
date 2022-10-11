@@ -3,9 +3,9 @@ package data
 import (
 	"context"
 
-	userPB "demo/api/user/service/v1"
-	"demo/app/gateway/interface/internal/conf"
-	"demo/pkg/jwt"
+	userPB "app/api/user/service/v1"
+	"app/app/gateway/interface/internal/conf"
+	"app/pkg/jwt"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -76,7 +76,7 @@ func (data *Data) SetupConsul(c *conf.Data) error {
 // SetupGRPCSvcCli .
 func (data *Data) SetupGRPCSvcCli(logger log.Logger) error {
 	selector.SetGlobalSelector(wrr.NewBuilder())
-	endpoint := "discovery:///demo.user.service"
+	endpoint := "discovery:///app.user.service"
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(endpoint),

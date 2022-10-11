@@ -10,10 +10,10 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
-	"demo/app/gateway/interface/internal/conf"
-	"demo/app/gateway/interface/internal/data"
-	"demo/pkg/tracer"
-	zapPkg "demo/pkg/zap"
+	"app/app/gateway/interface/internal/conf"
+	"app/app/gateway/interface/internal/data"
+	"app/pkg/tracer"
+	zapPkg "app/pkg/zap"
 
 	zap "github.com/go-kratos/kratos/contrib/log/zap/v2"
 )
