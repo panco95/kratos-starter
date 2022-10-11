@@ -35,9 +35,6 @@ func init() {
 }
 
 func newApp(logger log.Logger, c *conf.Server, data *data.Data, gs *grpc.Server) *kratos.App {
-	Project = c.Info.Project
-	Name = Project + "." + c.Info.Name
-	id = Name + "#" + c.Grpc.Addr
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -53,15 +50,6 @@ func newApp(logger log.Logger, c *conf.Server, data *data.Data, gs *grpc.Server)
 
 func main() {
 	flag.Parse()
-	logger := log.With(zap.NewLogger(zapPkg.NewLogger(flaglogpath, true)),
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-	)
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -77,6 +65,19 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+
+	Project = bc.Server.Info.Project
+	Name = Project + "." + bc.Server.Info.Name
+	id = Name + "#" + bc.Server.Grpc.Addr
+	logger := log.With(zap.NewLogger(zapPkg.NewLogger(flaglogpath, true)),
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+		"trace.id", tracing.TraceID(),
+		"span.id", tracing.SpanID(),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+	)
 
 	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Auth, logger)
 	if err != nil {
