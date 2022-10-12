@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"
-	"github.com/jameskeane/bcrypt"
 )
 
 type userRepo struct {
@@ -83,10 +82,8 @@ func (r *userRepo) CreateUser(ctx context.Context, user *models.User) (*models.U
 	now := time.Now()
 	user.LastLoginTime = &now
 	user.LoginTimes = 1
-	salt, _ := bcrypt.Salt()
-	hash, _ := bcrypt.Hash(user.Password, salt)
-	user.PasswordSalt = salt
-	user.Password = hash
+	user.PasswordSalt = utils.RandStr(6)
+	user.Password = utils.Md5(utils.Md5(user.Password) + user.PasswordSalt)
 	if md, ok := metadata.FromServerContext(ctx); ok {
 		user.LastLoginIp = md.Get("x-app-global-requestIP")
 	}
@@ -105,7 +102,7 @@ func (r *userRepo) Login(ctx context.Context, req *models.User) (*models.User, e
 	if err != nil {
 		return nil, err
 	}
-	if !bcrypt.Match(req.Password, user.Password) {
+	if utils.Md5(utils.Md5(req.Password)+user.PasswordSalt) != user.Password {
 		return nil, errors.PasswordError
 	}
 
