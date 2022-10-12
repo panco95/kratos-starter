@@ -5,6 +5,7 @@ import (
 	"app/pkg/jwt"
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
@@ -23,8 +24,10 @@ func CheckToken(jwt *jwt.Jwt) middleware.Middleware {
 				ctx = metadata.AppendToClientContext(ctx, "x-app-global-userId", fmt.Sprintf("%d", id))
 
 				defer func() {
-					refreshToken, _ := jwt.BuildToken(id, 3600)
-					tr.ReplyHeader().Set("x-app-global-refreshToken", refreshToken)
+					if IsReplyRefreshToken(tr.Operation()) {
+						refreshToken, _ := jwt.BuildToken(id, 3600)
+						tr.ReplyHeader().Set("x-app-global-refreshToken", refreshToken)
+					}
 				}()
 			}
 			return handler(ctx, req)
@@ -32,14 +35,20 @@ func CheckToken(jwt *jwt.Jwt) middleware.Middleware {
 	}
 }
 
-func CheckTokenRoute(project string) func(context.Context, string) bool {
+func IsCheckToken() func(context.Context, string) bool {
 	return func(ctx context.Context, operation string) bool {
-		prefix := "/" + project + "."
-		if operation == prefix+"gateway.v1.GatewayInterface/Login" ||
-			operation == prefix+"gateway.v1.GatewayInterface/Register" {
+		if strings.Contains(operation, "/Login") || strings.Contains(operation, "/Register") {
 			return false
 		} else {
 			return true
 		}
+	}
+}
+
+func IsReplyRefreshToken(operation string) bool {
+	if strings.Contains(operation, "/Logout") {
+		return false
+	} else {
+		return true
 	}
 }

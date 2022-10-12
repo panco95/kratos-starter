@@ -40,7 +40,7 @@ func NewHTTPServer(c *conf.Server, data *data.Data, gatewaySvc *service.GatewayS
 				recovery.Recovery(),
 				tracing.Server(),
 				middlewares.CheckToken(data.Jwt),
-			).Match(middlewares.CheckTokenRoute(c.Info.Project)).Build(),
+			).Match(middlewares.IsCheckToken()).Build(),
 			validate.Validator(),
 		),
 	}
