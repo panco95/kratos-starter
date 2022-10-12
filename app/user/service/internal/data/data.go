@@ -94,6 +94,7 @@ func (data *Data) SetupMysql(c *conf.Data) error {
 	}
 	err = client.AutoMigrate(
 		&models.User{},
+		&models.UserExtraInfo{},
 	)
 	if err != nil {
 		return err
