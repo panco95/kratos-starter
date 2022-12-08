@@ -1,4 +1,4 @@
-# Micro Service Starter
+# Kratos Starter
 
 Run Server:
 - cd app/gateway/interface && kratos run
